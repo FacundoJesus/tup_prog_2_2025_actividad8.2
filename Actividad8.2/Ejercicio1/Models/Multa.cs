@@ -13,6 +13,12 @@ namespace Ejercicio1.Models
         public double Importe { get; set; }
 
         public Multa() { }
+        public Multa(string patente, DateOnly vencimiento, double importe)
+        {
+            this.Patente = patente;
+            this.Vencimiento = vencimiento;
+            this.Importe = importe;
+        }
 
         public int CompareTo(object obj)
         {
@@ -26,17 +32,17 @@ namespace Ejercicio1.Models
 
         public override string ToString()
         {
-            return $"Patente: {this.Patente} - Vencimiento: {this.Vencimiento} - Importe: {this.Importe:c2}";
+            return $"Patente: {this.Patente} - Vencimiento: {this.Vencimiento:dd/MM/yyyy} - Importe: {this.Importe:c2}";
         }
 
         public bool Importar(string data, IExportador exportador)
         {
-            throw new NotImplementedException();
+            return exportador.Importar(data, this);
         }
 
         public string Exportar(IExportador exportador)
         {
-            throw new NotImplementedException();
+            return exportador.Exportar(this);
         }
     }
 }
