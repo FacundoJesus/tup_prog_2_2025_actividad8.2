@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ejercicio1.Models.Exportadores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace Ejercicio1.Models
 
         public override string ToString()
         {
-            return $"Patente: {this.Patente} - Vencimiento: {this.Vencimiento:dd/MM/yyyy} - Importe: {this.Importe:c2}";
+            return $"Patente: {this.Patente} - Venc.: {this.Vencimiento:dd/MM/yyyy} Importe: {this.Importe:c2}";
         }
 
         public bool Importar(string data, IExportador exportador)

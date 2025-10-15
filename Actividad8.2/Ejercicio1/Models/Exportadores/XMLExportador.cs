@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Ejercicio1.Models.Exportadores
 {
@@ -22,14 +23,10 @@ namespace Ejercicio1.Models.Exportadores
 
             if (match.Success)
             {
-                string patente = match.Groups[1].Value;
-                DateOnly vencimiento = DateOnly.ParseExact(match.Groups[2].Value,"dd/MM/yyyy");
-                double importe = Convert.ToDouble(match.Groups[3].Value);
-
-                m.Patente = patente;
-                m.Vencimiento = vencimiento;
-                m.Importe = importe;
-
+                m.Patente = match.Groups[1].Value;
+                m.Vencimiento = DateOnly.ParseExact(match.Groups[2].Value,"dd/MM/yyyy");
+                m.Importe = Convert.ToDouble(match.Groups[3].Value, CultureInfo.InvariantCulture);
+               
                 return true;
 
             }

@@ -11,11 +11,10 @@ namespace Ejercicio1
             InitializeComponent();
         }
 
-        List<IExportable> exportables = new List<IExportable>();
+        private void Form1_Load(object sender, EventArgs e) { }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-        }
+
+        List<IExportable> exportables = new List<IExportable>();
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
@@ -29,54 +28,103 @@ namespace Ejercicio1
 
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
-            IExportable nuevo = null;
+            IExportable nuevaMulta = null;
 
             string patente = tbPatente.Text;
-            DateOnly vencimiento = new DateOnly(dateTimePicker.Value.Year, dateTimePicker.Value.Month, dateTimePicker.Value.Day);
+            DateOnly vencimiento = DateOnly.FromDateTime(dtpVencimiento.Value);
             double importe = Convert.ToDouble(tbImporte.Text);
 
-            nuevo = new Multa(patente, vencimiento, importe);
+            nuevaMulta = new Multa(patente, vencimiento, importe);
 
             exportables.Sort();
-            int idx = exportables.BinarySearch(nuevo);
+            int idx = exportables.BinarySearch(nuevaMulta);
             if (idx > -1)
             {
                 Multa multa = exportables[idx] as Multa;
                 multa.Importe += importe;
-                if (multa.Vencimiento < ((Multa)nuevo).Vencimiento)
+                if (multa.Vencimiento < ((Multa)nuevaMulta).Vencimiento)
                 {
-                    multa.Vencimiento = ((Multa)nuevo).Vencimiento;
+                    multa.Vencimiento = ((Multa)nuevaMulta).Vencimiento;
                 }
             }
             else
             {
-                exportables.Add(nuevo);
+                exportables.Add(nuevaMulta);
             }
+
+            #region Limpio Campos
+            btnActualizar.PerformClick();
+            tbPatente.Clear();
+            dtpVencimiento.Value = DateTime.Now;
+            tbImporte.Clear();
+            #endregion
         }
 
         private void btnImportar_Click(object sender, EventArgs e)
         {
             openFileDialog1.Filter = "(csv)|*.csv|(json)|*.json|(txt)|*.txt|(xml)|*.xml";
 
-            if(openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string nombre = openFileDialog1.FileName;
                 int tipoArchivo = openFileDialog1.FilterIndex;
 
                 IExportador exportador = (new ExportadorFactory()).GetInstance(tipoArchivo);
 
-                FileStream fs = new FileStream(nombre, FileMode.Open, FileAccess.Read);
-                StreamReader sr = new StreamReader(fs);
+                FileStream fs = null;
+                StreamReader sr = null;
 
-                while (!sr.EndOfStream)
+                try
                 {
-                    string linea = sr.ReadLine();
+                    fs = new FileStream(nombre, FileMode.Open, FileAccess.Read);
+                    sr = new StreamReader(fs);
 
-                    IExportable nuevo = new Multa();
+                    sr.ReadLine();
+                    while (!sr.EndOfStream)
+                    {
+                        string linea = sr.ReadLine();
 
-                    nuevo.Importar(linea,exportador);
+                        IExportable nuevo = new Multa();
 
+                        if (nuevo.Importar(linea, exportador) == true)
+                        {
+
+                            int idx = exportables.BinarySearch(nuevo);
+                            if (idx >= 0)
+                            {
+                                Multa multa = exportables[idx] as Multa;
+                                multa.Importe += ((Multa)nuevo).Importe;
+                                if (multa.Vencimiento < ((Multa)nuevo).Vencimiento) ;
+                                multa.Vencimiento = ((Multa)nuevo).Vencimiento;
+                            }
+                            else
+                                exportables.Add(nuevo);
+                        }
+                    }
                 }
+                catch (PatenteNoValidaException ex)
+                {
+                }
+                finally
+                {
+                    if (fs != null) fs.Close();
+                    if (sr != null) sr.Close();
+                }
+
+                btnActualizar.PerformClick();
+            }
+
+
+        }
+
+        private void lsbResultado_SelectedValueChanged(object sender, EventArgs e)
+        {
+            Multa selececcionada = lsbResultado.SelectedItem as Multa;
+            if (selececcionada != null)
+            {
+                tbPatente.Text = selececcionada.Patente;
+                dtpVencimiento.Value = selececcionada.Vencimiento.ToDateTime(new TimeOnly(0, 0));
+                tbImporte.Text = selececcionada.Importe.ToString("c2");
             }
         }
     }

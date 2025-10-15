@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ejercicio1.Models
 {
-    public interface IExportador
+    public class PatenteNoValidaException:ApplicationException
     {
-        public bool Importar(string data, Multa m);
-        public string Exportar(Multa m);
+
     }
 }

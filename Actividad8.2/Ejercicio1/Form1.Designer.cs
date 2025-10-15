@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dateTimePicker = new DateTimePicker();
+            dtpVencimiento = new DateTimePicker();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -43,12 +43,12 @@
             saveFileDialog1 = new SaveFileDialog();
             SuspendLayout();
             // 
-            // dateTimePicker
+            // dtpVencimiento
             // 
-            dateTimePicker.Location = new Point(154, 59);
-            dateTimePicker.Name = "dateTimePicker";
-            dateTimePicker.Size = new Size(200, 23);
-            dateTimePicker.TabIndex = 0;
+            dtpVencimiento.Location = new Point(154, 59);
+            dtpVencimiento.Name = "dtpVencimiento";
+            dtpVencimiento.Size = new Size(200, 23);
+            dtpVencimiento.TabIndex = 0;
             // 
             // label1
             // 
@@ -110,6 +110,7 @@
             lsbResultado.ScrollAlwaysVisible = true;
             lsbResultado.Size = new Size(331, 169);
             lsbResultado.TabIndex = 7;
+            lsbResultado.SelectedValueChanged += lsbResultado_SelectedValueChanged;
             // 
             // btnActualizar
             // 
@@ -159,7 +160,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(dateTimePicker);
+            Controls.Add(dtpVencimiento);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Ejercicio 1";
@@ -170,7 +171,7 @@
 
         #endregion
 
-        private DateTimePicker dateTimePicker;
+        private DateTimePicker dtpVencimiento;
         private Label label1;
         private Label label2;
         private Label label3;
