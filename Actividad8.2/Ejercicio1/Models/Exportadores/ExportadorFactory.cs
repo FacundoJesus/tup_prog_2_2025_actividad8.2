@@ -28,7 +28,7 @@ namespace Ejercicio1.Models.Exportadores
                 default:
                     break;
             }
-            return null;
+            return exportador;
         }
     }
 }

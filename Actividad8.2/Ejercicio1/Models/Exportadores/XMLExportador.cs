@@ -13,12 +13,12 @@ namespace Ejercicio1.Models.Exportadores
 
         public string Exportar(Multa m)
         {
-            return $"<Multa><Patente>{m.Patente}</Patente><Vencimiento>{m.Vencimiento:dd/MM/yyyy}</Vencimiento><Importe>{m.Importe}</Importe></Multa>";
+            return $"<Multa><Patente>{m.Patente}</Patente><Vencimiento>{m.Vencimiento:dd/MM/yyyy}</Vencimiento><Importe>{m.Importe:f2}</Importe></Multa>";
         }
 
         public bool Importar(string data, Multa m)
         {
-            Regex regex = new Regex(@"<Patente>(\w{3}\d{3})</Patente><Vencimiento>(d{2}/d{2}/d{4})<Importe>(d+,d+)</Importe>", RegexOptions.IgnoreCase);
+            Regex regex = new Regex(@"<Patente>([a-z]{3}\d{3})</Patente><Vencimiento>(\d{2}/\d{2}/\d{4})</Vencimiento><Importe>(\d+,\d*)</Importe>", RegexOptions.IgnoreCase);
             Match match = regex.Match(data);
 
             if (match.Success)

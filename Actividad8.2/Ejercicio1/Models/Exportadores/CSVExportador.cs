@@ -11,7 +11,7 @@ namespace Ejercicio1.Models.Exportadores
     {
         public string Exportar(Multa m)
         {
-            return $"{m.Patente};{m.Vencimiento:dd/MM/yyyy};{m.Importar:c2}"; 
+            return $"{m.Patente};{m.Vencimiento:dd/MM/yyyy};{m.Importe:f2}"; 
         }
 
         public bool Importar(string data, Multa m)

@@ -18,7 +18,7 @@ namespace Ejercicio1.Models
                 } 
             set
             {
-                Regex regexPatente = new Regex(@"^\w{3}\d{3}$");
+                Regex regexPatente = new Regex(@"^\w{3}\d{3}$",RegexOptions.IgnoreCase);
                 Match matchPatente = regexPatente.Match(value);
                 if (!matchPatente.Success) {
                     throw new PatenteNoValidaException();
@@ -27,6 +27,7 @@ namespace Ejercicio1.Models
             }
         }
         public DateOnly Vencimiento { get; set; }
+
         public double Importe { get; set; }
 
         public Multa() { }
@@ -49,7 +50,7 @@ namespace Ejercicio1.Models
 
         public override string ToString()
         {
-            return $"Patente: {this.Patente} - Venc.: {this.Vencimiento:dd/MM/yyyy} Importe: {this.Importe:c2}";
+            return $"Patente: {this.Patente.ToUpper()} - Vencimiento: {this.Vencimiento:dd/MM/yyyy} - Importe: {this.Importe:f2}";
         }
 
         public bool Importar(string data, IExportador exportador)

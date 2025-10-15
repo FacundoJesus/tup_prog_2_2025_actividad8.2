@@ -64,18 +64,22 @@ namespace Ejercicio1
                     exportables.Add(nuevaMulta);
                 }
 
-                #region Limpio Campos
-                btnActualizar.PerformClick();
-                tbPatente.Clear();
-                dtpVencimiento.Value = DateTime.Now;
-                tbImporte.Clear();
-                #endregion
-
-            }catch(PatenteNoValidaException excePatente)
+            }
+            catch(PatenteNoValidaException excePatente)
             {
                 MessageBox.Show(excePatente.Message,"ERROR",MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message,"ERROR",MessageBoxButtons.OK,MessageBoxIcon.Error); 
+            }
 
+            #region Limpio Campos
+            btnActualizar.PerformClick();
+            tbPatente.Clear();
+            dtpVencimiento.Value = DateTime.Now;
+            tbImporte.Clear();
+            #endregion
         }
 
         private void btnImportar_Click(object sender, EventArgs e)
@@ -106,7 +110,6 @@ namespace Ejercicio1
 
                         if (nuevo.Importar(linea, exportador) == true)
                         {
-
                             int idx = exportables.BinarySearch(nuevo);
                             if (idx >= 0)
                             {
@@ -154,19 +157,26 @@ namespace Ejercicio1
                 StreamWriter sw = null;
                 try
                 {
-                    fs = new FileStream(nombre, FileMode.OpenOrCreate, FileAccess.Write);
+                    fs = new FileStream(nombre, FileMode.Create, FileAccess.Write);
                     sw = new StreamWriter(fs);
 
                     //Debo escribir la 1º linea...VER
+                    /*
                     if (exportador is CSVExportador) 
                         sw.WriteLine("Patente;Vencimiento;Importe");
                     if (exportador is CampoFijoExportador) sw.WriteLine("Patente  Venc.     Importe");
                     if (exportador is XMLExportador) sw.WriteLine("<Multas>");
-
+                    */
                     foreach (IExportable exportable in exportables) {
                         sw.WriteLine(exportable.Exportar(exportador));
                     }
 
+                    //if (exportador is XMLExportador) sw.WriteLine("</Multas>");
+
+                }
+                catch(PatenteNoValidaException excePatente) 
+                {
+                    MessageBox.Show(excePatente.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch(Exception ex) 
                 {
