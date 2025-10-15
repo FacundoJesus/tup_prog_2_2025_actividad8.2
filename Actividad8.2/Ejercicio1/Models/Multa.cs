@@ -3,13 +3,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Ejercicio1.Models
 {
     public class Multa:IComparable,IExportable
     {
-        public string Patente { get; set; }
+
+        private string patente;
+        public string Patente { 
+            get {
+                return patente;
+                } 
+            set
+            {
+                Regex regexPatente = new Regex(@"^\w{3}\d{3}$");
+                Match matchPatente = regexPatente.Match(value);
+                if (!matchPatente.Success) {
+                    throw new PatenteNoValidaException();
+                }
+                patente = value;
+            }
+        }
         public DateOnly Vencimiento { get; set; }
         public double Importe { get; set; }
 
