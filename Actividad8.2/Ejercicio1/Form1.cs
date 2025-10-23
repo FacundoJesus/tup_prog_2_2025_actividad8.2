@@ -160,18 +160,9 @@ namespace Ejercicio1
                     fs = new FileStream(nombre, FileMode.Create, FileAccess.Write);
                     sw = new StreamWriter(fs);
 
-                    //Debo escribir la 1º linea...VER
-                    /*
-                    if (exportador is CSVExportador) 
-                        sw.WriteLine("Patente;Vencimiento;Importe");
-                    if (exportador is CampoFijoExportador) sw.WriteLine("Patente  Venc.     Importe");
-                    if (exportador is XMLExportador) sw.WriteLine("<Multas>");
-                    */
                     foreach (IExportable exportable in exportables) {
                         sw.WriteLine(exportable.Exportar(exportador));
                     }
-
-                    //if (exportador is XMLExportador) sw.WriteLine("</Multas>");
 
                 }
                 catch(PatenteNoValidaException excePatente) 
